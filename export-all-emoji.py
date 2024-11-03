@@ -19,12 +19,17 @@ symbol_template = "symbol-template.svg"
 # Simple SVG-Template with one centered symbol.
 font = "Segoe UI Emoji"
 
-inkscape_path = '"C:/Program Files/Inkscape/bin/inkscape.exe" '
+
 action_object_to_path = '--export-overwrite --actions="select-by-id:text-box; object-to-path; export-id:text-box; '
 action_export = 'export-id:text-box; export-do; FileClose" '
 
 # Set True to print all executed commands
 debug = False
+
+def get_inkscape_path():
+    if os.name == "nt":
+        return '"C:/Program Files/Inkscape/bin/inkscape.exe" '
+    return 'inkscape '
 
 # Writes a unicode emoji as svg into the $outDir.
 def write_new_letter(glyph, hex_code, decimal, name, category):
@@ -50,10 +55,10 @@ def write_new_letter(glyph, hex_code, decimal, name, category):
 
 def convert_to_path(file_name):
     input_file = '"' + file_name + '"'
-    command = inkscape_path + action_object_to_path + action_export + input_file
+    command = get_inkscape_path() + action_object_to_path + action_export + input_file
     if debug:
         print(command)
-    subprocess.call(command)
+    subprocess.call(command, shell=True)
     print("New symbol: " + input_file)
 
 
